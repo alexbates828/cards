@@ -1,4 +1,4 @@
-package com.games.cards
+package com.boardgames
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class CardsApplication
 
 fun main(args: Array<String>) {
-	runApplication<CardsApplication>(*args)
+    runApplication<CardsApplication>(*args)
 }
