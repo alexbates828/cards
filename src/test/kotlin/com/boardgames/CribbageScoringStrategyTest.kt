@@ -209,4 +209,74 @@ class CribbageScoringStrategyTest {
         assertEquals(5, score)
     }
 
+    @Test
+    fun `ten and a five - scorePlayedCards - expecting 2`() {
+        val playedCards = listOf(
+                PokerCard(PokerValue.Ten, PokerSuit.Clubs),
+                PokerCard(PokerValue.Five, PokerSuit.Hearts)
+        )
+
+        val score = CribbageScoringStrategy.scorePlayedCards(playedCards)
+
+        assertEquals(2, score)
+    }
+
+    @Test
+    fun `six four and a five - scorePlayedCards - expecting 5`() {
+        val playedCards = listOf(
+                PokerCard(PokerValue.Six, PokerSuit.Clubs),
+                PokerCard(PokerValue.Four, PokerSuit.Hearts),
+                PokerCard(PokerValue.Five, PokerSuit.Spades)
+        )
+
+        val score = CribbageScoringStrategy.scorePlayedCards(playedCards)
+
+        assertEquals(5, score)
+    }
+
+    @Test
+    fun `three fives and a jack - scorePlayedCards - expecting 0`() {
+        val heldCards = listOf(
+                PokerCard(PokerValue.Five, PokerSuit.Spades),
+                PokerCard(PokerValue.Five, PokerSuit.Hearts),
+                PokerCard(PokerValue.Five, PokerSuit.Clubs),
+                PokerCard(PokerValue.Jack, PokerSuit.Diamonds)
+        )
+
+        val score = CribbageScoringStrategy.scorePlayedCards(heldCards)
+
+        assertEquals(0, score)
+    }
+
+    /**
+     * The subtlety here is that you only get 1 point for a thirty-one. One additional point is handled for a "go",
+     * but that is handled downstream.
+     */
+    @Test
+    fun `thirty-one on a run of three - scorePlayedCards - expecting 4`() {
+        val heldCards = listOf(
+                PokerCard(PokerValue.Four, PokerSuit.Spades),
+                PokerCard(PokerValue.Eight, PokerSuit.Hearts),
+                PokerCard(PokerValue.Nine, PokerSuit.Clubs),
+                PokerCard(PokerValue.Ten, PokerSuit.Diamonds)
+        )
+
+        val score = CribbageScoringStrategy.scorePlayedCards(heldCards)
+
+        assertEquals(4, score)
+    }
+
+    @Test
+    fun `three of a kind on a fifteen - scorePlayedCards - expecting 8`() {
+        val heldCards = listOf(
+                PokerCard(PokerValue.Five, PokerSuit.Spades),
+                PokerCard(PokerValue.Five, PokerSuit.Hearts),
+                PokerCard(PokerValue.Five, PokerSuit.Clubs)
+        )
+
+        val score = CribbageScoringStrategy.scorePlayedCards(heldCards)
+
+        assertEquals(8, score)
+    }
+
 }

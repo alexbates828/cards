@@ -4,6 +4,7 @@ import com.boardgames.PokerUtils.countPairs
 import com.boardgames.PokerUtils.findLargestRun
 import com.boardgames.PokerUtils.findRunsOfSize
 import com.boardgames.PokerUtils.isFlush
+import com.boardgames.PokerUtils.isRummyRunNoJoker
 import com.boardgames.PokerUtils.pointValue52
 import com.boardgames.models.cards.PokerCard
 import com.boardgames.models.cards.PokerValue
@@ -53,6 +54,58 @@ object CribbageScoringStrategy : ICardGameScoringStrategy<PokerCard> {
         }
 
         return score
+    }
+
+    override fun scorePlayedCards(playedCards: Collection<PokerCard>): Int = scorePlayedCards(playedCards.toList())
+
+    fun scorePlayedCards(playedCards: List<PokerCard>): Int {
+        if (playedCards.size <= 1) {
+            return 0
+        }
+
+        val total = playedCards.sumBy { it.value.pointValue52() }
+
+        var points = 0
+        if (total == 15) {
+            points += 2
+        } else if (total == 31) {
+            // Technically, one point is earned for a 31, and the other point for the "go" is handled downstream
+            points += 1
+        }
+
+        val playedCardsSize = playedCards.size
+        val greedyRun = mutableListOf<PokerCard>()
+
+        for (i in 0 until playedCardsSize) {
+            greedyRun.add(playedCards[playedCardsSize-1-i])
+            if (!greedyRun.isRummyRunNoJoker()) {
+                break
+            }
+        }
+        if (!greedyRun.isRummyRunNoJoker()) {
+            greedyRun.removeAt(greedyRun.size-1)
+        }
+
+        if (greedyRun.size >= 3) {
+            points += greedyRun.size
+        }
+
+        val greedyPairs = mutableListOf<PokerCard>()
+        for (i in 0 until playedCardsSize) {
+            greedyPairs.add(playedCards[playedCardsSize-1-i])
+            if (greedyPairs.distinctBy { it.value }.size > 1) {
+                break
+            }
+        }
+        if (greedyPairs.distinctBy { it.value }.size > 1) {
+            greedyPairs.removeAt(greedyPairs.size-1)
+        }
+
+        if (greedyPairs.size >= 2) {
+            points += 2*greedyPairs.size
+        }
+
+        return points
     }
 
     fun Set<PokerCard>.countFifteens(): Int {

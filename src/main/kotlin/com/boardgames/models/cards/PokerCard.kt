@@ -6,6 +6,7 @@ class PokerCard(
         val value: PokerValue,
         val suit: PokerSuit?
 ) : AbstractCard {
+    override var hasBeenPlayed: Boolean = false
 
     val shortName: String
         get() {
