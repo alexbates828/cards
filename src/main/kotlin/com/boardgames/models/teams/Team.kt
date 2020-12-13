@@ -4,13 +4,8 @@ import com.boardgames.models.GamePlayer
 import com.boardgames.models.games.Game
 import java.util.*
 
-open class Team<TypedPlayer: GamePlayer>(val gamePlayers: List<TypedPlayer>, startingPoints: Int = 0) {
+open class Team<TypedPlayer: GamePlayer>(val gamePlayers: List<TypedPlayer>) {
     val uuid: UUID = UUID.randomUUID()
-    var points: Int? = startingPoints
-
-    fun addPoints(points: Int) {
-        this.points = this.points?.plus(points)
-    }
 
     open class Builder<TypedPlayer: GamePlayer>(var gamePlayers: MutableList<TypedPlayer> = mutableListOf()) {
         fun addPlayer(gamePlayer: TypedPlayer) = apply { this.gamePlayers.add(gamePlayer) }

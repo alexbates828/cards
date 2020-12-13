@@ -2,7 +2,6 @@ package com.boardgames.models.games
 
 import com.boardgames.models.GamePlayer
 import com.boardgames.models.teams.Team
-import java.lang.reflect.Type
 import java.util.*
 
 open class GameWithTeams<TypedPlayer: GamePlayer>(val teams: List<Team<TypedPlayer>>): Game {
@@ -15,6 +14,10 @@ open class GameWithTeams<TypedPlayer: GamePlayer>(val teams: List<Team<TypedPlay
 
     fun anyPlayers(predicate: (TypedPlayer) -> Boolean): Boolean {
         return teams.any { team -> team.gamePlayers.any { player -> predicate(player) } }
+    }
+
+    fun allPlayers(predicate: (TypedPlayer) -> Boolean): Boolean {
+        return teams.all {team -> team.gamePlayers.any {player -> predicate(player) } }
     }
 
     constructor(vararg players: TypedPlayer): this(players.map { Team(listOf(it)) }) {
