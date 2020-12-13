@@ -8,7 +8,7 @@ import java.util.*
 typealias CribbageGamePlayer = PokerCardGamePlayer
 
 class CribbageGame(
-        teams: List<Team<CribbageGamePlayer>>
+        teams: List<Team>
 ) : CardGame<PokerCard, CribbageGamePlayer>(teams) {
     var playedCardStack: LinkedList<PokerCard> = LinkedList()
     var total = 0
